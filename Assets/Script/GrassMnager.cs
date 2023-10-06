@@ -10,6 +10,7 @@ public class GrassMnager : MonoBehaviour
     [SerializeField] Mesh[] _mesh;//変更したいメッシュをセットする
     MeshRenderer _meshRenderer;
     MeshFilter _meshFilter;
+    MeshCollider _meshCollider;
     DayCounter _dayCounter;
     bool[] _levelSwich = new bool[3];//レベルアップのコードを1回だけ実行する
     int _dayCount = 0;//日にちをカウントする
@@ -20,6 +21,7 @@ public class GrassMnager : MonoBehaviour
         _dayCounter = GameObject.FindObjectOfType<DayCounter>();
         _meshFilter = GetComponent<MeshFilter>();
         _meshRenderer = GetComponent<MeshRenderer>();
+        _meshCollider = GetComponent<MeshCollider>();
         for (int i = 0; i < _meshRenderer.materials.Length; i++)
         {
             _meshRenderer.materials[i] = GetComponent<Material>();
@@ -44,6 +46,7 @@ public class GrassMnager : MonoBehaviour
             {
                 LevelUp();
                 _levelSwich[0] = true;
+                _meshCollider.sharedMesh = _mesh[0];
             }
         }
         else if (_xp >= 10 && _xp < 15)//10レベル以上になった時にレベルを2に上げる
@@ -52,6 +55,7 @@ public class GrassMnager : MonoBehaviour
             {
                 LevelUp();
                 _levelSwich[1] = true;
+                _meshCollider.sharedMesh = _mesh[1];
             }
         }
         else if (_xp >= 15 && _xp < 20)//15レベル以上になった時にレベルを3に上げる
@@ -60,10 +64,11 @@ public class GrassMnager : MonoBehaviour
             {
                 LevelUp();
                 _levelSwich[2] = true;
+                _meshCollider.sharedMesh = _mesh[2];
             }
         }
     }
-    public void NextDay()
+    void NextDay()
     {
         //ボタンが押されたらランダムな値を_xpに入れる
         int Ran;
@@ -73,7 +78,7 @@ public class GrassMnager : MonoBehaviour
         _xp += Ran;
     }
 
-    public void LevelUp()
+    void LevelUp()
     {
         //OnMat();//レベルが上がったときにMethodを呼び出す
         _level += 1;//レベルを1上げる
@@ -86,17 +91,19 @@ public class GrassMnager : MonoBehaviour
         switch (_level)
         {
             case 1:
-                _meshFilter.mesh = _mesh[0];
-                _meshRenderer.material = _material[0];
+                _meshFilter.mesh = _mesh[_level -1];
+                _meshRenderer.material = _material[_level-1];
                 break;
             case 2:
-                _meshFilter.mesh = _mesh[1];
-                _meshRenderer.material = _material[1];
+                _meshFilter.mesh = _mesh[_level - 1];
+                _meshRenderer.material = _material[_level - 1];
                 break;
             case 3:
-                _meshFilter.mesh = _mesh[2];
-                _meshRenderer.material = _material[2];
+                _meshFilter.mesh = _mesh[_level - 1];
+                _meshRenderer.material = _material[_level - 1];
                 break;
+                //最後まで成長したときに実を実らせる
+                //その後植物を枯らす
         }
     }
 }

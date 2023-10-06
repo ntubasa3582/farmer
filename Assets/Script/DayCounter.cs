@@ -8,21 +8,14 @@ public class DayCounter : MonoBehaviour
     [SerializeField] float _timer;
     public event Action DayChange;
     float _time;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
+        //_timer変数にセットした数値ごとにif文の中身が実行される
         _time += Time.deltaTime;
         if (_time > _timer)
         {
-            Debug.Log("時間だよ");
             _time = 0;
-            DayChange();
+            DayChange();//一定時間ごとにこのメソッドが呼ばれる
         }
     }
 }
