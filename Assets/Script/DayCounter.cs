@@ -1,12 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DayCounter : MonoBehaviour
 {
     [SerializeField] float _timer;
+    [SerializeField] Text _dayCountText;
     public event Action DayChange;
+    int _dayCount;
     float _time;
     void Update()
     {
@@ -16,6 +17,8 @@ public class DayCounter : MonoBehaviour
         {
             _time = 0;
             DayChange();//ˆê’èŠÔ‚²‚Æ‚É‚±‚Ìƒƒ\ƒbƒh‚ªŒÄ‚Î‚ê‚é
+            _dayCount++;
+            _dayCountText.text = _dayCount.ToString("0" + "“ú–Ú");
         }
     }
 }

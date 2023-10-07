@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class GrassMnager : MonoBehaviour
 {
@@ -12,16 +12,21 @@ public class GrassMnager : MonoBehaviour
     MeshFilter _meshFilter;
     MeshCollider _meshCollider;
     DayCounter _dayCounter;
-    bool[] _levelSwich = new bool[3];//レベルアップのコードを1回だけ実行する
+    Transform _transform;
+    bool[] _levelSwich = new bool[100];//レベルアップのコードを1回だけ実行する
     int _dayCount = 0;//日にちをカウントする
     int _xp = 0;//経験値
     int _level = 0;//一定の経験値が手に入ったらレベルを1ずつ上げる
+    float _random;
     private void Awake()
     {
         _dayCounter = GameObject.FindObjectOfType<DayCounter>();
         _meshFilter = GetComponent<MeshFilter>();
         _meshRenderer = GetComponent<MeshRenderer>();
         _meshCollider = GetComponent<MeshCollider>();
+        _transform = GetComponent<Transform>();
+        RandomNum(0,360);
+        _transform.Rotate(0, _random, 0);
         for (int i = 0; i < _meshRenderer.materials.Length; i++)
         {
             _meshRenderer.materials[i] = GetComponent<Material>();
@@ -40,70 +45,50 @@ public class GrassMnager : MonoBehaviour
 
     private void Update()
     {
-        if (_xp >= 5 && _xp < 10)//5レベル以上になった時にレベルを１に上げる
+        switch (_xp)
         {
-            if (_levelSwich[0] == false)
-            {
-                LevelUp();
-                _levelSwich[0] = true;
-                _meshCollider.sharedMesh = _mesh[0];
-            }
-        }
-        else if (_xp >= 10 && _xp < 15)//10レベル以上になった時にレベルを2に上げる
-        {
-            if (_levelSwich[1] == false)
-            {
-                LevelUp();
-                _levelSwich[1] = true;
-                _meshCollider.sharedMesh = _mesh[1];
-            }
-        }
-        else if (_xp >= 15 && _xp < 20)//15レベル以上になった時にレベルを3に上げる
-        {
-            if (_levelSwich[2] == false)
-            {
-                LevelUp();
-                _levelSwich[2] = true;
-                _meshCollider.sharedMesh = _mesh[2];
-            }
+            case >= 30://経験値が30以上の時に5レベルになる
+                LevelSwich(4);
+                break;
+            case >= 20://経験値が20以上の時に4レベルになる
+                LevelSwich(3);
+                break;
+            case >= 15://経験値が15以上の時に3レベルになる
+                LevelSwich(2);
+                break;
+            case >= 10://経験値が10以上の時に2レベルになる
+                LevelSwich(1);
+                break;
+            case >= 5://経験値が5以上の時に1レベルになる
+                LevelSwich(0);
+                break;
         }
     }
-    void NextDay()
+    void NextDay()//このMethodが呼ばれたときにランダムに経験値が入る
     {
         //ボタンが押されたらランダムな値を_xpに入れる
         int Ran;
         _dayCount++;
-        Debug.Log(_dayCount + "日目");
         Ran = Random.Range(_rnd[0], _rnd[1]);
         _xp += Ran;
     }
 
-    void LevelUp()
+
+    void LevelSwich(int x)
     {
-        //OnMat();//レベルが上がったときにMethodを呼び出す
-        _level += 1;//レベルを1上げる
-        Debug.Log("現在" + _level + "レベルです");
-        MaterialChange();
-    }
-    void MaterialChange()
-    {
-        //レベルが上がったときにメッシュとマテリアルを変更する
-        switch (_level)
+        if (_levelSwich[x] == false)
         {
-            case 1:
-                _meshFilter.mesh = _mesh[_level -1];
-                _meshRenderer.material = _material[_level-1];
-                break;
-            case 2:
-                _meshFilter.mesh = _mesh[_level - 1];
-                _meshRenderer.material = _material[_level - 1];
-                break;
-            case 3:
-                _meshFilter.mesh = _mesh[_level - 1];
-                _meshRenderer.material = _material[_level - 1];
-                break;
-                //最後まで成長したときに実を実らせる
-                //その後植物を枯らす
+
+            _level += 1;//レベルを1上げる
+            _meshFilter.mesh = _mesh[_level - 1];
+            _meshRenderer.material = _material[_level - 1];
+            _meshCollider.sharedMesh = _mesh[2];
         }
+        _levelSwich[x] = true;
+    }
+    
+    void RandomNum(float x,float y)
+    {
+        _random = Random.Range(x,y);
     }
 }
