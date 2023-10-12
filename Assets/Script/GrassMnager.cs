@@ -4,15 +4,15 @@ using UnityEngine.UI;
 
 public class GrassMnager : MonoBehaviour
 {
-    [Header("乱数の範囲の最低値が0で最高値が1")]
-    [SerializeField] int[] _rnd = null;
     [SerializeField,Tooltip("変更したいマテリアルをセットする")] Material[] _material;
     [SerializeField,Tooltip("変更したいメッシュをセットする")] Mesh[] _mesh;
+    [SerializeField] GameObject[] _cildObjects;
     MeshRenderer _meshRenderer;
     MeshFilter _meshFilter;
     MeshCollider _meshCollider;
     DayCounter _dayCounter;
     Transform _transform;
+    Vector3 _cildPos;
     bool[] _levelSwich = new bool[100];//レベルアップのコードを1回だけ実行する
     /// <summary>日にちをカウントする</summary>
     int _dayCount = 0;
@@ -21,7 +21,19 @@ public class GrassMnager : MonoBehaviour
     /// <summary>一定の経験値が手に入ったらレベルを1ずつ上げる</summary>
     int _level = 0;
     /// <summary>オブジェクトが生成される時にランダムな角度にする</summary>
-    float _rotRandom;
+    int _intRandom = default;
+    float _floatRandom = default;
+
+    public enum Fruits
+    {
+        /// <summary>トウモロコシ</summary>
+        Corn,
+        /// <summary>ナス</summary>
+        EggPlant,
+        /// <summary>トマト</summary>
+        Tomato,
+    }
+
     private void Awake()
     {
         _dayCounter = GameObject.FindObjectOfType<DayCounter>();
@@ -29,12 +41,9 @@ public class GrassMnager : MonoBehaviour
         _meshRenderer = GetComponent<MeshRenderer>();
         _meshCollider = GetComponent<MeshCollider>();
         _transform = GetComponent<Transform>();
-        RandomNum(0,360);
-        _transform.Rotate(0, _rotRandom, 0);
-        for (int i = 0; i < _meshRenderer.materials.Length; i++)
-        {
-            _meshRenderer.materials[i] = GetComponent<Material>();
-        }
+        FloatRandom(0, 360);
+        _transform.Rotate(0, _floatRandom, 0);//角度をランダムな値にする
+        _cildPos = new Vector3(transform.position.x, 1.8f, transform.position.z);
     }
 
     private void OnEnable()
@@ -51,11 +60,14 @@ public class GrassMnager : MonoBehaviour
     {
         switch (_xp)
         {
-            case >= 50:
+            case >= 60://経験値が50以上の時に
                 Destroy(gameObject);
                 break;
-            case >= 30://経験値が30以上の時に5レベルになる
-                LevelSwich(5);
+            case >= 40://経験値が40以上の時に6レベルになる
+                LevelSwich(6);
+                break;
+            case >= 30://経験値が30以上の時に作物を生成する5レベルになる
+                Generate();
                 break;
             case >= 20://経験値が20以上の時に4レベルになる
                 LevelSwich(4);
@@ -74,18 +86,16 @@ public class GrassMnager : MonoBehaviour
     void NextDay()//このMethodが呼ばれたときにランダムに経験値が入る
     {
         //ボタンが押されたらランダムな値を_xpに入れる
-        int Ran;
         _dayCount++;
-        Ran = Random.Range(_rnd[0], _rnd[1]);
-        _xp += Ran;
+        IntRandom(1, 4);
+        _xp += _intRandom;
     }
 
 
     void LevelSwich(int x)
     {
-        if (_levelSwich[x-1] == false)
+        if (_levelSwich[x-1] == false)//一回だけ実行されるようにboolで管理
         {
-
             _level++;//レベルを1上げる
             _meshFilter.mesh = _mesh[_level - 1];//メッシュを変更する
             _meshRenderer.material = _material[_level - 1];//マテリアルを変更する
@@ -93,9 +103,26 @@ public class GrassMnager : MonoBehaviour
         }
         _levelSwich[x-1] = true;
     }
-    
-    void RandomNum(float x,float y)
+
+    void Generate()//ランダムな値を配列に代入する
     {
-        _rotRandom = Random.Range(x,y);
+        if (_levelSwich[10] == false)
+        {
+            IntRandom(0, 3);
+            var parent = this.transform;
+            GameObject childObject = Instantiate(_cildObjects[_intRandom], _cildPos, Quaternion.identity,parent);
+        }
+        _levelSwich[10] = true;
+    }
+
+    void IntRandom(int x,int y)//ランダムなintの値を代入する
+    {
+        _intRandom = default;
+        _intRandom = Random.Range(x, y);
+    }
+    void FloatRandom(float x,float y)//ランダムなfloatの値を代入する
+    {
+        _floatRandom = default;
+        _floatRandom = Random.Range(x,y);
     }
 }

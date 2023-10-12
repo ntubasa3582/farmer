@@ -110,6 +110,10 @@ MonoBehaviour:
   - {fileID: 4300012, guid: b69b26c8b73b8bd49bf243bbe541a2e0, type: 3}
   - {fileID: 4300012, guid: b69b26c8b73b8bd49bf243bbe541a2e0, type: 3}
   - {fileID: 4300012, guid: b69b26c8b73b8bd49bf243bbe541a2e0, type: 3}
+  _cildObjects:
+  - {fileID: 2139960230941349456, guid: 050857f84757158418cd0fc9fe6fd597, type: 3}
+  - {fileID: 7778086658677368431, guid: ba8067b5906897442aa0bf83e30efdfe, type: 3}
+  - {fileID: 2530794983567296185, guid: c0c32b255f50df44eb670cfff832dfc1, type: 3}
 --- !u!64 &3596109622057615427
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -118,9 +122,9 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5705658169018178593}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300004, guid: b69b26c8b73b8bd49bf243bbe541a2e0, type: 3}

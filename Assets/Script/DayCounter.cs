@@ -10,9 +10,7 @@ public class DayCounter : MonoBehaviour
     float _time;
     private void Awake()
     {
-        _dayCount++;
         DayChange();
-        Debug.Log(_dayCount);
     }
     void Update()
     {
