@@ -34,6 +34,19 @@ public class GrassMnager : MonoBehaviour
         Tomato,
     }
 
+    public enum LevelGrass
+    {
+        Level0,
+        Level1,
+        Level2,
+        Level3,
+        Level4,
+        LEvel5,
+        Level6,
+        Level7,
+        Level8,
+    }
+
     private void Awake()
     {
         _dayCounter = GameObject.FindObjectOfType<DayCounter>();
@@ -109,6 +122,7 @@ public class GrassMnager : MonoBehaviour
         if (_levelSwich[10] == false)
         {
             IntRandom(0, 3);
+            //オブジェクトを生成するときにこのオブジェクトの子オブジェクトとして生成する
             var parent = this.transform;
             GameObject childObject = Instantiate(_cildObjects[_intRandom], _cildPos, Quaternion.identity,parent);
         }

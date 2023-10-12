@@ -27,23 +27,25 @@ public class GameText : MonoBehaviour
     }
     private void OnEnable()
     {
-        _dayCounter.DayChange += AddDayCount;
+        _dayCounter.DayChange += AddDayCount;//デリゲート登録
         _playerController.SeedCount += AddSeedCount;
     }
 
     private void OnDisable()
     {
-        _dayCounter.DayChange -= AddDayCount;
+        _dayCounter.DayChange -= AddDayCount;//デリゲート登録を解除
         _playerController.SeedCount -= AddSeedCount;    
     }
 
     private void AddDayCount()
     {
+        //_dayCountの値をテキストで表示している
         _gameTexts[(int)TextName.DayText].text = _dayCounter._dayCount.ToString("0"+ "日目");
     }
 
     private void AddSeedCount()
     {
+        //_plantCountの値をテキストで表示している
         _gameTexts[(int)TextName.SeedText].text = _playerController._plantCount.ToString("残り"+"0"+"個");
     }
 

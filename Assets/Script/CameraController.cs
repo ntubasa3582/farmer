@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]GameObject[] _posObj;
+    [SerializeField] GameObject[] _posObj;
     Transform _transform;
     int _cameraPosCount = 1;
 
@@ -14,16 +14,60 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             if (_cameraPosCount == 1)
             {
                 _transform.position = _posObj[1].transform.position;
+                _transform.rotation = _posObj[1].transform .rotation;
+                _cameraPosCount++;
             }
+            else if (_cameraPosCount == 2)
+            {
+                _transform.position = _posObj[2].transform.position;
+                _transform.rotation = _posObj[2].transform.rotation;
+                _cameraPosCount++;
+            }
+            else if (_cameraPosCount == 3)
+            {
+                _transform.position = _posObj[3].transform.position;
+                _transform.rotation = _posObj[3].transform.rotation;
+                _cameraPosCount++;
+            }
+            else if (_cameraPosCount == 4)
+            {
+                _transform.position = _posObj[0].transform.position;
+                _transform.rotation = _posObj[0].transform.rotation;
+                _cameraPosCount = 1;
+            }
+
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.J))
         {
-            _transform.position = _posObj[3].transform.position;
+            if (_cameraPosCount == 1)
+            {
+                _transform.position = _posObj[3].transform.position;
+                _transform.rotation = _posObj[3].transform.rotation;
+                _cameraPosCount = 4;
+            }
+            else if (_cameraPosCount == 4)
+            {
+                _transform.position = _posObj[2].transform.position;
+                _transform.rotation = _posObj[2].transform.rotation;
+                _cameraPosCount--;
+            }
+            else if (_cameraPosCount == 3)
+            {
+                _transform.position = _posObj[1].transform.position;
+                _transform.rotation = _posObj[1].transform.rotation;
+                _cameraPosCount--;
+            }
+            else if (_cameraPosCount == 2)
+            {
+                _transform.position = _posObj[0].transform.position;
+                _transform.rotation = _posObj[0].transform.rotation;
+                _cameraPosCount--;
+            }
         }
     }
 

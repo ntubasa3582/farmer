@@ -8,21 +8,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _moveSpeed = 3;//プレイヤーのスピード
     [SerializeField] GameObject _seedObjecct;//生成するオブジェクト
     [SerializeField] public int _plantCount = 0;//オブジェクトの生成回数を記録する変数
+    //このメソッドが呼ばれたときに生成のオブジェクトの数を記録しているテキストの値を変える
     public event Action SeedCount;
     Rigidbody _rigidbody = default;
     Vector3 _position;
     bool _isGround = false;//地面のチェック
     bool _isClick = true;//インターバルをチェック
     bool _longPress = false;//長押しできるかのチェック
-    float _time;
+    float _clickTime;//クリックできないようにインターバルをつけている
 
 
     private void Awake()
     {
-        SeedCount();
     }
     void Start()
     {
+        SeedCount();
         Physics.gravity = new Vector3(0, -10, 0);
         _rigidbody = GetComponent<Rigidbody>();
         //Debug.Log("現在の種の数は" + _plantCount + "です");
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(_isGround);
         _position = new Vector3(transform.position.x, 0.94f, transform.position.z);
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -46,7 +48,7 @@ public class PlayerController : MonoBehaviour
         {
             _longPress = true;
         }
-        else if (Input.GetMouseButtonDown(1))//左クリックが押されたら長押しできるboolをfalseにする
+        if (Input.GetMouseButtonUp(0))//左クリックが押されたら長押しできるboolをfalseにする
         {
             _longPress = false;
         }
@@ -58,11 +60,11 @@ public class PlayerController : MonoBehaviour
                 PlantObject();
             }
         }
-        _time += Time.deltaTime;
-        if (_time > 0.5)//連続でクリック出来ないようにインターバルをつけてる
+        _clickTime += Time.deltaTime;
+        if (_clickTime > 0.5)//連続でクリック出来ないようにインターバルをつけてる
         {
             _isClick = true;
-            _time = 0;
+            _clickTime = 0;
         }
     }
 
@@ -72,6 +74,10 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             _isGround = true;
+        }
+        else
+        {
+            _isGround = false;
         }
         if (collision.gameObject.tag == "Box")
         {
@@ -87,9 +93,8 @@ public class PlayerController : MonoBehaviour
             //_plantCountが0より上の値ならオブジェクトを生成してカウントを1減らす
             if (_plantCount > 0)
             {
-                Instantiate(_seedObjecct, _position, Quaternion.identity);
+                Instantiate(_seedObjecct, _position, Quaternion.identity);//オブジェクトを生成する
                 CountPlace(-1);//_palntCountに-1を代入している
-                //Debug.Log("残り数は" + _plantCount + "個です");
             }
         }
 
