@@ -1,26 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class PlayerMoveController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] float _moveSpeed = 3;//プレイヤーのスピード
     [SerializeField] GameObject _seedObjecct;//生成するオブジェクト
-    [SerializeField] int _plantCount = 0;//オブジェクトの生成回数を記録する変数
-    [SerializeField] Text _seedText;
+    [SerializeField]public int _plantCount = 0;//オブジェクトの生成回数を記録する変数
+    public event Action SeedCount;
     Rigidbody _rigidbody = default;
     Vector3 _position;
     bool _isGround = false;//地面のチェック
-    float _random;
+
+    private void Awake()
+    {
+        SeedCount();
+    }
     void Start()
     {
         Physics.gravity = new Vector3(0, -10, 0);
-        _seedText.text = _plantCount.ToString("000");
         _rigidbody = GetComponent<Rigidbody>();
-        Debug.Log("現在の種の数は" + _plantCount + "です");
+        //Debug.Log("現在の種の数は" + _plantCount + "です");
     }
 
     // Update is called once per frame
@@ -37,7 +38,7 @@ public class PlayerMoveController : MonoBehaviour
         {
             transform.position = new Vector3(0, 1.4f, 0);
         }
-        if (Input.GetMouseButtonDown(0))//Eキーが押されたらオブジェクトを生成する関数を呼ぶ
+        if (Input.GetMouseButtonDown(0))//左クリックが押されたらオブジェクトを生成する関数を呼ぶ
         {
             PlantObject();
         }
@@ -68,7 +69,7 @@ public class PlayerMoveController : MonoBehaviour
             {
                 Instantiate(_seedObjecct, _position, Quaternion.identity);
                 CountPlace(-1);//_palntCountに-1を代入している
-                Debug.Log("残り数は" + _plantCount + "個です");
+                //Debug.Log("残り数は" + _plantCount + "個です");
                 TextToString();
             }
         }
@@ -77,11 +78,11 @@ public class PlayerMoveController : MonoBehaviour
 
     void TextToString()//_plantCountの値をテキストで表示する
     {
-        _seedText.text = _plantCount.ToString("000");
     }
 
     void CountPlace(int Place)//_plantCountに値を加算する
     {
         _plantCount += Place;
+        SeedCount();
     }
 }

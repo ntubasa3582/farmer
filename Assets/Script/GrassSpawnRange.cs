@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GrassSpawnRange : MonoBehaviour
 {
+    //このスクリプトはランダムにオブジェクトを生成する
     [SerializeField] GameObject _instanceObject;
-    MeshCollider _meshCollider;
     DayCounter _dayCounter;
     Vector3 _spawnRenge;
     [SerializeField] int _spawn;
@@ -13,7 +13,6 @@ public class GrassSpawnRange : MonoBehaviour
     private void Awake()
     {
         _dayCounter = GameObject.FindObjectOfType<DayCounter>();
-        _meshCollider = GetComponent<MeshCollider>();
         for (int i=0; i < _spawn; i++)
         {
             VectorRandom();
