@@ -13,8 +13,10 @@ public class GameText : MonoBehaviour
     {
         /// <summary>日にち </summary>
         DayText,
-        /// <summary>種 </summary>
+        /// <summary>種</summary>
         SeedText,
+        /// <summary>収穫した数</summary>
+        FruitsText,
     }
 
     private void Awake()
@@ -29,12 +31,14 @@ public class GameText : MonoBehaviour
     {
         _dayCounter.DayChange += AddDayCount;//デリゲート登録
         _playerController.SeedCount += AddSeedCount;
+        _playerController.FruitsCount += AddFruitsCount;
     }
 
     private void OnDisable()
     {
         _dayCounter.DayChange -= AddDayCount;//デリゲート登録を解除
-        _playerController.SeedCount -= AddSeedCount;    
+        _playerController.SeedCount -= AddSeedCount;  
+        _playerController.FruitsCount -= AddFruitsCount;
     }
 
     private void AddDayCount()
@@ -47,6 +51,10 @@ public class GameText : MonoBehaviour
     {
         //_plantCountの値をテキストで表示している
         _gameTexts[(int)TextName.SeedText].text = _playerController._plantCount.ToString("残り"+"0"+"個");
+    }
+    private void AddFruitsCount()
+    {
+        _gameTexts[(int)TextName.FruitsText].text = _playerController._fruitsCount.ToString("0" + "収穫");
     }
 
 

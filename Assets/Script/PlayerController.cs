@@ -7,15 +7,17 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float _moveSpeed = 3;//プレイヤーのスピード
     [SerializeField] GameObject _seedObjecct;//生成するオブジェクト
-    [SerializeField] public int _plantCount = 0;//オブジェクトの生成回数を記録する変数
     //このメソッドが呼ばれたときに生成のオブジェクトの数を記録しているテキストの値を変える
     public event Action SeedCount;
+    public event Action FruitsCount;
     Rigidbody _rigidbody = default;
     Vector3 _position;
     bool _isGround = false;//地面のチェック
-    bool _isClick = true;//インターバルをチェック
+    bool _isClick = false;//インターバルをチェック
     bool _longPress = false;//長押しできるかのチェック
     float _clickTime;//クリックできないようにインターバルをつけている
+    public int _plantCount = 0;//オブジェクトの生成回数を記録する変数
+    public int _fruitsCount = 0;//Fuitsタグが付いたオブジェクトに触れたら1づつ増える
 
 
     private void Awake()
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         SeedCount();
+        FruitsCount();
         Physics.gravity = new Vector3(0, -10, 0);
         _rigidbody = GetComponent<Rigidbody>();
         //Debug.Log("現在の種の数は" + _plantCount + "です");
@@ -83,6 +86,16 @@ public class PlayerController : MonoBehaviour
         {
             CountPlace(10);//_palntCountにプラス10している
             Destroy(collision.gameObject);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Fruits")
+        {
+            Debug.Log("作物に触れた");
+            _fruitsCount++;
+            FruitsCount();
+            Destroy(other.gameObject);
         }
     }
 
